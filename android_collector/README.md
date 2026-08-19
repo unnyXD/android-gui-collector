@@ -1,4 +1,4 @@
-# Android GUI 轨迹采集工具（ADB 人工采集）
+# Android GUI 轨迹数据采集工具
 
 不改任何 App，通过 ADB + uiautomator + getevent，人工操作手机、工具自动记录每一步
 截图 / 控件 bbox / 触摸坐标，最终输出需求文档中的 JSON 轨迹格式，截图保存本地。
