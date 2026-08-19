@@ -65,7 +65,7 @@ class Recorder:
             try:
                 xml = self.adb.dump_tree()
                 if "<hierarchy" in xml:
-                    d = parse_dump(xml)
+                    d = parse_dump(xml, self.screen_w, self.screen_h)
                     if d.nodes:
                         return d
             except AdbError:

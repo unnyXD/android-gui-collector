@@ -10,10 +10,10 @@ def _parse_bounds(bounds_str: str) -> tuple[int, int, int, int] | None:
 
 
 class UiDump:
-    def __init__(self, xml: str):
+    def __init__(self, xml: str, screen_w: int = 0, screen_h: int = 0):
         self.xml = xml
-        self.width = 0
-        self.height = 0
+        self.width = screen_w
+        self.height = screen_h
         self.nodes: list[dict] = []
         self._parse()
 
@@ -22,9 +22,12 @@ class UiDump:
             root = ET.fromstring(self.xml)
         except ET.ParseError:
             return
+        # 部分 ROM（MIUI 等）hierarchy 根节点不带 width/height，需用屏幕尺寸兜底
         try:
-            self.width = int(root.attrib.get("width", "0"))
-            self.height = int(root.attrib.get("height", "0"))
+            w = int(root.attrib.get("width", "0"))
+            h = int(root.attrib.get("height", "0"))
+            if w > 0 and h > 0:
+                self.width, self.height = w, h
         except ValueError:
             pass
         for el in root.iter("node"):
@@ -70,5 +73,5 @@ class UiDump:
         ]
 
 
-def parse_dump(xml: str) -> UiDump:
-    return UiDump(xml)
+def parse_dump(xml: str, screen_w: int = 0, screen_h: int = 0) -> UiDump:
+    return UiDump(xml, screen_w, screen_h)
