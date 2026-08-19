@@ -53,15 +53,25 @@ class Recorder:
         shot = self._shot_dir / name
         self.adb.screencap(shot)
         rel = Path(self.execution_id) / self.cfg.screenshots_dir_name / name
-        dump = None
-        try:
-            dump = parse_dump(self.adb.dump_tree())
-        except AdbError:
-            dump = None
+        dump = self._try_dump()
         pkg = self._safe_current_app()
         if pkg:
             self._packages_seen.append(pkg)
         return rel.as_posix(), dump
+
+    def _try_dump(self) -> UiDump | None:
+        """uiautomator dump 在 MIUI/动画场景常首次失败，重试并校验 XML。"""
+        for _ in range(3):
+            try:
+                xml = self.adb.dump_tree()
+                if "<hierarchy" in xml:
+                    d = parse_dump(xml)
+                    if d.nodes:
+                        return d
+            except AdbError:
+                pass
+            time.sleep(0.6)
+        return None
 
     # ---------- 包名推断 ----------
     LAUNCHER_HINTS = ("launcher", "mobi.launcher", "trebuchet", "miui.home")

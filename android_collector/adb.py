@@ -78,7 +78,7 @@ class Adb:
 
     def dump_tree(self) -> str:
         """返回 uiautomator dump 的 XML 字符串；失败抛 AdbError。"""
-        self.run(["shell", "uiautomator", "dump", "/sdcard/window_dump.xml"], timeout=90)
+        self.run(["shell", "uiautomator", "dump", "/sdcard/window_dump.xml"], timeout=60)
         out = self.run(["shell", "cat", "/sdcard/window_dump.xml"], timeout=30)
         return out
 
