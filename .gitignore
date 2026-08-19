@@ -1,0 +1,18 @@
+# 排除：采集数据、回放截图、临时文件
+output/
+replay_shots/
+replay_shots*/
+dev/
+*.zip
+*.adoc.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 系统
+.DS_Store
+Thumbs.db
